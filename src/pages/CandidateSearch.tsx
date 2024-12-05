@@ -7,20 +7,21 @@ const CandidateSearch = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const results = await searchGithub();
-      const detailedCandidates = await Promise.all(
-        results.items.map((user: any) => searchGithubUser(user.login))
-      );
-      setCandidates(detailedCandidates);
-    } catch (error) {
-      console.error('Search error:', error);
-    }
-    setLoading(false);
-  };
+ const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    const results = await searchGithub(searchTerm);
+    const detailedCandidates = await Promise.all(
+      results.items.map((user: any) => searchGithubUser(user.login))
+    );
+    setCandidates(detailedCandidates);
+  } catch (error) {
+    console.error('Search error:', error);
+  }
+  setLoading(false);
+};
+
   const saveCandidate = (candidate: Candidate) => {
     const savedCandidates = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
     localStorage.setItem(
